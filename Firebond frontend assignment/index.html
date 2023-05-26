@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebond front end dev assignment</title>
+</head>
+<body>
+    <div id="container">
+        <div class="box">
+          my arg
+          <select class="dropdown1">
+            <option value="true">true</option>
+            <option value="false">false</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="addBox()">+</button>
+      <div>
+        <select id="dropdown3">
+          <option value="select" selected>Select</option>
+          <option value="constant">Constant</option>
+          <option value="argument">Argument</option>
+          <option value="and">AND</option>
+          <option value="or">OR</option>
+        </select>
+        <button onclick="removeDropdown()">x</button>
+      </div>
+      <div class="result">Result: undefined</div>
+    
+      <script>
+        function addBox() {
+          var container = document.getElementById('container');
+          var box = document.createElement('div');
+          box.classList.add('box');
+          box.innerHTML = 'my arg <select class="dropdown1"><option value="true">true</option><option value="false">false</option></select>';
+          container.appendChild(box);
+        }
+    
+        function removeDropdown() {
+          var dropdown3 = document.getElementById('dropdown3');
+          var result = document.querySelector('.result');
+          if (dropdown3.selectedIndex === 0) {
+            alert('Cannot remove the default dropdown');
+            return;
+          }
+          dropdown3.remove();
+          result.innerHTML = 'Result: undefined';
+        }
+    
+        function updateResult() {
+          var dropdowns = document.querySelectorAll('.dropdown1, .dropdown2, .dropdown3');
+          var result = document.querySelector('.result');
+          var values = Array.from(dropdowns).map(function(dropdown) {
+            return dropdown.value;
+          });
+          result.innerHTML = 'Result: ' + values.join(' ');
+        }
+    
+        function replaceDropdown() {
+          var dropdown3 = document.getElementById('dropdown3');
+          var value = dropdown3.value;
+          var container = document.getElementById('container');
+          var box = document.createElement('div');
+          box.classList.add('box');
+          var select;
+          if (value === 'constant') {
+            select = document.createElement('select');
+            select.classList.add('dropdown2');
+            select.innerHTML = '<option value="true">true</option><option value="false">false</option>';
+          } else if (value === 'argument') {
+            select = document.createElement('select');
+            select.classList.add('dropdown1');
+            select.innerHTML = '<option value="my arg">my arg</option><option value="X">X</option>';
+          } else if (value === 'and' || value === 'or') {
+            select = document.createElement('select');
+            select.classList.add('dropdown3');
+            select.innerHTML = '<option value="select" selected>Select</option><option value="constant">Constant</option><option value="argument">Argument</option><option value="and">AND</option><option value="or">OR</option>';
+            var removeButton = document.createElement('button');
+            removeButton.textContent = 'x';
+            removeButton.onclick = removeDropdown;
+            container.appendChild(select);
+            container.appendChild(removeButton);
+          }
+          box.appendChild(select);
+          container.appendChild(box);
+        }
+    
+        document.addEventListener('change', function(event) {
+          var target = event.target;
+          if (target.matches('.dropdown1, .dropdown2, .dropdown3')) {
+            updateResult();
+            if (target.classList.contains('dropdown3')) {
+              replaceDropdown();
+            }
+          }
+        });
+      </script>
+
+
+
+
+
+
+    <!-- <div id="container">
+        <div>
+          <input type="text" class="argBox" value="my arg">
+          <select class="dropdown1">
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+        <div>
+          <button onclick="addArgumentBox()">+</button>
+        </div>
+        <div>
+          <select class="dropdown3">
+            <option value="select" selected>Select</option>
+            <option value="constant">Constant</option>
+            <option value="argument">Argument</option>
+            <option value="and">And</option>
+            <option value="or">Or</option>
+          </select>
+          <button onclick="deleteCurrentDropdown()">x</button>
+        </div>
+    </div>
+    
+    <script>
+        function addArgumentBox() {
+          var container = document.getElementById("container");
+    
+          var newBox = document.createElement("div");
+          var argBox = document.createElement("input");
+          argBox.type = "text";
+          argBox.className = "argBox";
+          newBox.appendChild(argBox);
+    
+          var dropdown2 = document.createElement("select");
+          dropdown2.className = "dropdown2";
+          dropdown2.onchange = function() { dropdownChanged(this); };
+          var option1 = document.createElement("option");
+          option1.value = "true";
+          option1.innerHTML = "True";
+          dropdown2.appendChild(option1);
+          var option2 = document.createElement("option");
+          option2.value = "false";
+          option2.innerHTML = "False";
+          dropdown2.appendChild(option2);
+          newBox.appendChild(dropdown2);
+    
+          container.insertBefore(newBox, container.children[container.children.length - 1]);
+        }
+    
+        function deleteCurrentDropdown() {
+          var dropdownDiv = document.getElementById("container").lastElementChild;
+          dropdownDiv.parentNode.removeChild(dropdownDiv);
+        }
+    
+        function dropdownChanged(dropdown) {
+          var selectedValue = dropdown.value;
+          var parentDiv = dropdown.parentNode;
+    
+          // Remove existing elements in the parent div
+          while (parentDiv.children.length > 2) {
+            parentDiv.removeChild(parentDiv.lastChild);
+          }
+    
+          if (selectedValue === "constant") {
+            var dropdown2 = document.createElement("select");
+            dropdown2.className = "dropdown2";
+            var option1 = document.createElement("option");
+            option1.value = "true";
+            option1.innerHTML = "True";
+            dropdown2.appendChild(option1);
+            var option2 = document.createElement("option");
+            option2.value = "false";
+            option2.innerHTML = "False";
+            dropdown2.appendChild(option2);
+            parentDiv.appendChild(dropdown2);
+          } else if (selectedValue === "argument") {
+            var dropdown1 = document.createElement("select");
+            dropdown1.className = "dropdown1";
+            var option1 = document.createElement("option");
+            option1.value = "my arg";
+            option1.innerHTML = "my arg";
+            dropdown1.appendChild(option1);
+            var option2 = document.createElement("option");
+            option2.value = "X";
+            option2.innerHTML = "X";
+            dropdown1.appendChild(option2);
+            parentDiv.appendChild(dropdown1);
+          }
+        }
+    </script> -->
+</body>
+</html>
